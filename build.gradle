@@ -1,0 +1,61 @@
+apply plugin: 'maven'
+
+uploadArchives.enabled = true
+
+subprojects {
+    group = 'com.ipsy'
+
+    apply plugin: 'java'
+    apply plugin: 'java-library'
+    apply plugin: 'maven'
+    apply plugin: 'groovy'
+    String mvnRepo = System.getProperty('MAVEN_REPO') ?: "file:///mvn-repo/ipsy3_0/development",
+           mvnSnapshotRepo = System.getenv('MAVEN_SNAPSHOT_REPO') ?: "file:///mvn-repo/ipsy3_0/development",
+           username = System.getProperty('MAVEN_USERNAME'),
+           password = System.getProperty('MAVEN_PASSWORD')
+
+    repositories {
+        mavenLocal()
+        maven {
+            url "file:///mvn-repo/ipsy3_0/development"
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
+        jcenter()
+        maven {
+            url "http://nexus.staging.ipsy.com:8081/nexus/content/groups/public/"
+        }
+    }
+
+    dependencies {
+        implementation (
+            "org.slf4j:slf4j-api:1.7.32",
+            "org.apache.logging.log4j:log4j-core:2.17.0",
+            "org.apache.logging.log4j:log4j-slf4j-impl:2.17.0"
+        )
+        compileOnly 'org.projectlombok:lombok:1.18.14'
+        annotationProcessor 'org.projectlombok:lombok:1.18.14'
+        testCompile (
+            'org.spockframework:spock-core:1.1-groovy-2.4-rc-2',
+            'cglib:cglib-nodep:3.2.7'
+        )
+        testCompileOnly 'org.projectlombok:lombok:1.18.10'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.14'
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                snapshotRepository(url: mvnSnapshotRepo) {
+                    authentication(userName: username, password: password)
+                }
+
+                repository(url: mvnRepo) {
+                    authentication(userName: username, password: password)
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,18 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+version '0.1.0'
+
+dependencies {
+  implementation platform("software.amazon.awssdk:bom:2.17.131")
+  implementation (
+      "software.amazon.awssdk:aws-lambda-java-core",
+      "software.amazon.awssdk:core",
+      "software.amazon.awssdk:aws-sdk-java",
+      "com.amazonaws:aws-lambda-java-events:3.11.0",
+      "com.amazonaws:aws-lambda-java-core:1.2.1"
+  )
+  testImplementation (
+      'com.squareup.retrofit2:retrofit-mock:2.3.0',
+      "org.objenesis:objenesis:2.6"
+  )
+}

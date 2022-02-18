@@ -1,0 +1,27 @@
+{
+  "eventSource": "aws:kafka",
+  "eventSourceArn": "arn:aws:kafka:us-east-1:450096215204:cluster/yaowei-test/2e70ccf0-b257-4e9c-8ee3-4ef902559446-13",
+  "bootstrapServers": "b-1.yaowei-test.illo20.c13.kafka.us-east-1.amazonaws.com:9094,b-2.yaowei-test.illo20.c13.kafka.us-east-1.amazonaws.com:9094",
+  "records": {
+    "topic1-1": [
+      {
+        "topic": "topic1",
+        "partition": 1,
+        "offset": 317248,
+        "timestamp": 1645059301134,
+        "timestampType": "CREATE_TIME",
+        "value": "aGho",
+        "headers": []
+      },
+      {
+        "topic": "topic1",
+        "partition": 1,
+        "offset": 317248,
+        "timestamp": 1645059301134,
+        "timestampType": "CREATE_TIME",
+        "value": "b29v",
+        "headers": []
+      }
+    ]
+  }
+}

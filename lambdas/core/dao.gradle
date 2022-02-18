@@ -1,0 +1,58 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath("nu.studer:gradle-jooq-plugin:7.1.1")
+  }
+}
+
+apply plugin: 'nu.studer.jooq'
+
+dependencies {
+  jooqGenerator 'mysql:mysql-connector-java:8.0.28'
+}
+//import javax.xml.bind.JAXB
+import org.jooq.meta.jaxb.Logging
+
+//all elements to configure the plugin
+//https://www.jooq.org/xsd/jooq-codegen-3.9.0.xsd
+
+jooq {
+  version = '3.16.4'
+  edition = nu.studer.gradle.jooq.JooqEdition.OSS
+  configurations {
+    main {
+      generationTool {
+        logging = Logging.WARN
+        jdbc {
+          driver = "com.mysql.cj.jdbc.Driver"
+          url = "jdbc:mysql://localhost:3306/next_graphql_admin"
+          user = "yaowei"
+          password = "secret"
+        }
+        generator {
+          name = 'org.jooq.codegen.DefaultGenerator'
+          strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+          database {
+            name = 'org.jooq.meta.mysql.MySQLDatabase'
+            inputSchema = "next_graphql_admin"
+          }
+          generate {
+            relations = true
+            records = true
+            javaTimeTypes = true
+            pojos = true
+            daos = true
+          }
+          target {
+            packageName = "com.bfa.models"
+            directory = "src/generated/java"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+rootProject.name = 'bfa-kafka'
+
+include 'core'
+include 'beans'
+include 'lambda-core'
+project(":lambda-core").projectDir = file("lambdas/core")
+include 'lambda-event-to-db'
+project(":lambda-event-to-db").projectDir = file("lambdas/eventToDb")

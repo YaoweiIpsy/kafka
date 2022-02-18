@@ -1,0 +1,88 @@
+plugins {
+  id 'java'
+  id 'idea'
+  id 'eclipse'
+  id "org.springframework.boot" version "2.1.4.RELEASE"
+  id "io.spring.dependency-management" version "1.0.7.RELEASE"
+  id "io.franzbecker.gradle-lombok" version "3.0.0"
+  id "nu.studer.jooq" version "3.0.3"
+}
+
+repositories {
+  mavenCentral()
+  maven { url "https://repo.spring.io/milestone" }
+  maven { url "https://plugins.gradle.org/m2/" }
+}
+
+group = 'mars'
+version = '0.0.1-SNAPSHOT'
+compileJava.options.encoding = 'UTF-8'
+
+dependencies {
+  annotationProcessor('org.projectlombok:lombok:1.18.4')
+  implementation 'org.projectlombok:lombok:1.18.4'
+  implementation('com.google.guava:guava:23.0')
+  implementation('joda-time:joda-time')
+  implementation('org.apache.commons:commons-lang3:3.8')
+  implementation 'org.apache.commons:commons-text:1.4'
+  implementation 'commons-collections:commons-collections:3.2.2'
+  // spring web
+  implementation('org.springframework.boot:spring-boot-starter-web')
+  implementation('org.springframework.boot:spring-boot-devtools')
+  implementation('org.springframework.boot:spring-boot-starter-actuator')
+  // data
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+  implementation('mysql:mysql-connector-java:8.0.13')
+  implementation('org.hibernate:hibernate-validator:6.0.13.Final')
+  implementation 'org.springframework.boot:spring-boot-starter-jooq'
+  implementation 'org.jooq:jooq:3.12.1'
+  jooqRuntime 'mysql:mysql-connector-java:8.0.13'
+  jooqRuntime 'org.slf4j:slf4j-api'
+  // test
+  testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+
+// jpa setting reference to https://gist.github.com/dsdstudio/bfe66037d39073f489dc8bfc5467fdfe
+jooq {
+  version = '3.12.1'
+  edition = 'OSS'
+  sample(sourceSets.main) {
+    jdbc {
+      driver = "org.mysql.cj.jdbc.Driver"
+      url = "jdbc:mysql://localhost:3306/"
+      user = "yaowei"
+      password = "secret"
+      schema= "next_graphql_admin"
+    }
+    generator {
+      name = 'org.jooq.codegen.DefaultGenerator'
+      strategy {
+        name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+        // ...
+      }
+      database {
+        name = 'org.jooq.meta.mysql.MySQLDatabase'
+        inputSchema = 'bs'
+        outputSchema = ''
+      }
+      generate {
+        deprecated = false
+        records = true
+//                immutablePojos = true
+//                fluentSetters = true
+      }
+      target {
+        packageName = 'org.jooq'
+        directory = 'src/main/generated'
+        encoding = 'UTF-8'
+      }
+    }
+  }
+}
+//codegen manually
+//compileJava.dependsOn.remove("generateSampleJooqSchemaSource")
+
+task codegen {
+  dependsOn generateSampleJooqSchemaSource
+}
